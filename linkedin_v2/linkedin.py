@@ -231,9 +231,8 @@ class LinkedInApplication(object):
         raise_for_error(response)
         return response.json()
 
-    def post_share(self, post_type='person', company_id=None, comment=None, title=None, description=None,
-                   submitted_url=None, submitted_image_url=None,
-                   visibility_code='anyone'):
+    def post_share(self, post_type='person', company_id=None, title=None, description=None,
+                   submitted_url=None, submitted_image_url=None):
 
         if post_type == 'organization':
             post_owner = "urn:li:organization:%s" % company_id
@@ -243,31 +242,38 @@ class LinkedInApplication(object):
         post = {
             "owner": post_owner,
             "text": {
-                "text": description
+                "text": ""
             },
-            "subject": title,
+            "subject": "",
             "distribution": {
                 "linkedInDistributionTarget": {}
             },
             "content": {
-                "contentEntities": [
-                    {
-                        "entityLocation": "",
-                        "thumbnails": []
-                    }
-                ],
+                "contentEntities": [],
                 "title": ""
             }
         }
-        if comment is not None:
-            post['comment'] = comment
+
+        content_entity = {
+            "entityLocation": "",
+            "thumbnails": []
+        }
+
         if title is not None:
             post['content']['title'] = title
+            post['subject'] = title
+
+        if description is not None:
+            post['text']['text'] = title
+
         if submitted_url is not None:
-            post['content']['submitted-url'] = submitted_url
+            content_entity['entityLocation'] = submitted_url
+
         if submitted_image_url is not None:
-            thumbnail = {"imageSpecificContent": {}, "resolvedUrl": submitted_image_url}
-            post['content']['contentEntities'][0]['thumbnails'] = [thumbnail]
+            content_entity['thumbnails'] = [{"imageSpecificContent": {}, "resolvedUrl": submitted_image_url}]
+
+        post['content']['contentEntities'] = [content_entity]
+
         response = self.make_request(
             'POST', ENDPOINTS.SHARE, data=json.dumps(post))
         return response.json()
