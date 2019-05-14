@@ -234,11 +234,12 @@ class LinkedInApplication(object):
     def post_share(self, post_type='person', company_id=None, comment=None, title=None, description=None,
                    submitted_url=None, submitted_image_url=None,
                    visibility_code='anyone'):
-        post_owner = ''
+
         if post_type == 'organization':
             post_owner = "urn:li:organization:%s" % company_id
         else:
             post_owner = "urn:li:person:%s" % self.get_profile()['id']
+
         post = {
             "owner": post_owner,
             "text": {
@@ -265,7 +266,8 @@ class LinkedInApplication(object):
         if submitted_url is not None:
             post['content']['submitted-url'] = submitted_url
         if submitted_image_url is not None:
-            post['content']['contentEntities']['thumbnails'][0]['resolvedUrl'] = submitted_image_url
+            thumbnail = {"imageSpecificContent": {}, "resolvedUrl": submitted_image_url}
+            post['content']['contentEntities'][0]['thumbnails'] = [thumbnail]
         response = self.make_request(
             'POST', ENDPOINTS.SHARE, data=json.dumps(post))
         return response.json()
