@@ -29,7 +29,8 @@ PERMISSIONS = enum('Permission',
                    CONTACT_INFO='r_contactinfo',
                    NETWORK_UPDATES='rw_nus',
                    GROUPS='rw_groups',
-                   MESSAGES='w_messages')
+                   MESSAGES='w_messages',
+                   COMPANY_SHARE='w_organization_social')
 
 ENDPOINTS = enum('LinkedInURL',
                  BASE='https://api.linkedin.com/v2',
