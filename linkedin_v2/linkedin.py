@@ -231,7 +231,9 @@ class LinkedInApplication(object):
         raise_for_error(response)
         return response.json()
 
-    def post_share(self, post_type='person', company_id=None, title=None, description=None,
+
+    def post_share(self, post_type='person', company_id=None, text=None,
+                   title=None,
                    submitted_url=None, submitted_image_url=None):
 
         if post_type == 'organization':
@@ -263,8 +265,8 @@ class LinkedInApplication(object):
             post['content']['title'] = title
             post['subject'] = title
 
-        if description is not None:
-            post['text']['text'] = title
+        if text is not None:
+            post['text']['text'] = text
 
         if submitted_url is not None:
             content_entity['entityLocation'] = submitted_url
@@ -403,7 +405,7 @@ class LinkedInApplication(object):
         raise_for_error(response)
         return response.json()
 
-    def get_group(self):
+    def get_groups(self):
         print(ENDPOINTS.BASE)
         url = "%s/groupMemberships?q=member&member=urn:li:person:%s&membershipStatuses=List(MEMBER,OWNER)" % (
             ENDPOINTS.BASE, self.get_profile()['id'])
@@ -411,18 +413,17 @@ class LinkedInApplication(object):
         # raise_for_error(response)
         return response.json()
 
-    def submit_company_share(self, **kwargs):
-        submitted_url, submitted_image_url, visibility_code = None, None, None
-        if kwargs["submitted_url"]:
-            submitted_url = kwargs["submitted_url"]
-        if kwargs["submitted_image_url"]:
-            submitted_image_url = kwargs["submitted_image_url"]
-        if kwargs["visibility_code"]:
-            visibility_code = kwargs["visibility_code"]
-        response = self.post_share(post_type='organization', company_id=kwargs["company_id"], comment=None,
-                                   title=kwargs["title"], description=kwargs["description"],
-                                   submitted_url=submitted_url, submitted_image_url=submitted_image_url,
-                                   visibility_code=visibility_code)
+    def submit_company_share(self, company_id=None, text=None,
+                             title=None,
+                             submitted_url=None, submitted_image_url=None):
+        response = self.post_share(
+            post_type='organization',
+            company_id=company_id,
+            text=text,
+            title=title,
+            submitted_url=submitted_url,
+            submitted_image_url=submitted_image_url,
+        )
         return response
 
     def find_member_organization_access_info(self, **kwargs):
