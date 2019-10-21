@@ -81,8 +81,8 @@ class LinkedInAuthentication(object):
     Implements a standard OAuth 2.0 flow that involves redirection for users to
     authorize the application to access account data.
     """
-    AUTHORIZATION_URL = 'https://www.linkedin.com/uas/oauth2/authorization'
-    ACCESS_TOKEN_URL = 'https://www.linkedin.com/uas/oauth2/accessToken'
+    AUTHORIZATION_URL = 'https://www.linkedin.com/oauth/v2/authorization'
+    ACCESS_TOKEN_URL = 'https://www.linkedin.com/oauth/v2/accessToken'
 
     def __init__(self, key, secret, redirect_uri, permissions=None):
         self.key = key
